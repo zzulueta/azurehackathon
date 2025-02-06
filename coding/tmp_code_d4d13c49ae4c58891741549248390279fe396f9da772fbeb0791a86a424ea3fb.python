@@ -1,0 +1,30 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import datetime
+
+# Load the dataset
+bigfoot_df = pd.read_csv('bigfootsightings.csv')
+
+# Extract the year from the date column
+bigfoot_df['year'] = pd.to_datetime(bigfoot_df['date'], errors='coerce').dt.year
+
+# Count the number of sightings for each year
+sightings_per_year = bigfoot_df['year'].value_counts().sort_index()
+
+# Get the top 10 years with the most sightings
+top_10_years = sightings_per_year.nlargest(10)
+
+# Create the column chart
+plt.figure(figsize=(10, 6))
+plt.bar(top_10_years.index, top_10_years.values)
+plt.xlabel('Year')
+plt.ylabel('Number of Sightings')
+plt.title('Top 10 Years with the Most Bigfoot Sightings')
+
+# Add the value on top of each bar
+for i, val in enumerate(top_10_years.values):
+    plt.text(top_10_years.index[i], val, str(val), ha='center', va='bottom')
+
+# Save the chart as a PNG file
+plt.savefig('top_10_years_bigfoot_sightings.png')
+plt.show()
